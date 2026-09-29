@@ -1,6 +1,6 @@
 # 🤖 AI PR Review Agent (CodeRabbit-style Multi-Agent System)
 
-An enterprise-ready, multi-agent GitHub PR review system built with **LangGraph**, **FastAPI**, **Groq LLMs** (`llama-3.3-70b-versatile`), **Qdrant Vector DB**, **Neo4j Code Graph**, and a **Streamlit** Human-in-the-Loop approval dashboard.
+An enterprise-ready, multi-agent GitHub PR review system built with **LangGraph**, **FastAPI**, **Groq LLMs** (`openai/gpt-oss-120b`), **Qdrant Vector DB**, **Neo4j Code Graph**, and a **Streamlit** Human-in-the-Loop approval dashboard.
 
 ---
 
