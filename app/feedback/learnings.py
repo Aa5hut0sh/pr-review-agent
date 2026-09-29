@@ -1,8 +1,7 @@
-import json
 import logging
-from typing import List, Dict, Any, Optional
-from app.indexing.vector_store import VectorStore
+
 from app.core.models import FindingFeedback
+from app.indexing.vector_store import VectorStore
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +36,7 @@ class LearningsStore:
         }])
         logger.info(f"Recorded feedback: {feedback.action} for {feedback.category}")
 
-    def get_relevant_learnings(self, context_query: str, limit: int = 3) -> List[str]:
+    def get_relevant_learnings(self, context_query: str, limit: int = 3) -> list[str]:
         """
         Retrieves relevant learnings based on the current PR context.
         """

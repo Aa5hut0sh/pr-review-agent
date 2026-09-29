@@ -1,12 +1,13 @@
 import logging
-from typing import Dict, Any
-from app.graph.state import ReviewState
+from typing import Any
+
 from app.github.diff_parser import DiffParser
+from app.graph.state import ReviewState
 
 logger = logging.getLogger(__name__)
 
 
-def ingest_node(state: ReviewState) -> Dict[str, Any]:
+def ingest_node(state: ReviewState) -> dict[str, Any]:
     """
     Ingests diff, parses files, filters out binaries and lockfiles.
     """

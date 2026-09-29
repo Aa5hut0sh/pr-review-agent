@@ -1,8 +1,8 @@
 import logging
 import time
-from typing import List, Dict, Any
-from app.eval.synthetic_prs import SYNTHETIC_BENCHMARK_SUITE, SyntheticPR
-from app.eval.metrics import evaluate_findings, compute_aggregate_metrics
+
+from app.eval.metrics import compute_aggregate_metrics, evaluate_findings
+from app.eval.synthetic_prs import SYNTHETIC_BENCHMARK_SUITE
 from app.graph.workflow import build_pr_review_graph
 
 logger = logging.getLogger(__name__)
@@ -89,7 +89,7 @@ def run_ablation_benchmark() -> str:
             eval_res = evaluate_findings(pr, findings)
             variant_results.append(eval_res)
 
-        elapsed = time.time() - start_time
+        logger.info(f"Completed {variant} in {time.time() - start_time:.2f}s")
         metrics = compute_aggregate_metrics(variant_results)
         cost_estimate = round(0.0003 * len(SYNTHETIC_BENCHMARK_SUITE), 4)
 

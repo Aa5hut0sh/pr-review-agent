@@ -1,7 +1,8 @@
 import logging
-from typing import List, Dict, Any, Tuple
+
 import numpy as np
 from sklearn.linear_model import LogisticRegression
+
 from app.core.models import Finding
 
 logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ class AcceptClassifier:
         self.is_fitted = False
         self._init_default_model()
 
-    def _extract_features(self, finding: Finding) -> List[float]:
+    def _extract_features(self, finding: Finding) -> list[float]:
         sev = SEVERITY_MAP.get(finding.severity, 1)
         cat = CATEGORY_MAP.get(finding.category, 0)
         conf = float(finding.confidence)
@@ -47,7 +48,7 @@ class AcceptClassifier:
         self.model.fit(X, y)
         self.is_fitted = True
 
-    def train(self, findings: List[Finding], labels: List[int]):
+    def train(self, findings: list[Finding], labels: list[int]):
         """
         Re-train on historical human accept/reject feedback labels (1=accepted, 0=rejected).
         """
@@ -72,7 +73,7 @@ class AcceptClassifier:
         prob = self.model.predict_proba(features)[0][1]
         return float(prob)
 
-    def rank_and_filter(self, findings: List[Finding], min_prob: float = 0.3) -> List[Finding]:
+    def rank_and_filter(self, findings: list[Finding], min_prob: float = 0.3) -> list[Finding]:
         """
         Ranks findings by acceptance probability and suppresses those below min_prob.
         """

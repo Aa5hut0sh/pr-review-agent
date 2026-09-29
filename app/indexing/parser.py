@@ -1,6 +1,6 @@
 import ast
 import re
-from typing import List, Dict, Any, Optional
+
 from pydantic import BaseModel
 
 
@@ -11,9 +11,9 @@ class CodeEntity(BaseModel):
     start_line: int
     end_line: int
     code: str
-    docstring: Optional[str] = None
-    calls: List[str] = []
-    imports: List[str] = []
+    docstring: str | None = None
+    calls: list[str] = []
+    imports: list[str] = []
 
 
 class CodeParser:
@@ -23,8 +23,8 @@ class CodeParser:
     """
 
     @classmethod
-    def parse_python(cls, file_path: str, source_code: str) -> List[CodeEntity]:
-        entities: List[CodeEntity] = []
+    def parse_python(cls, file_path: str, source_code: str) -> list[CodeEntity]:
+        entities: list[CodeEntity] = []
         lines = source_code.splitlines()
 
         try:
@@ -95,17 +95,17 @@ class CodeParser:
         return entities
 
     @classmethod
-    def parse_generic(cls, file_path: str, source_code: str) -> List[CodeEntity]:
+    def parse_generic(cls, file_path: str, source_code: str) -> list[CodeEntity]:
         """
         Regex-based chunker for languages when AST is not applicable.
         """
-        entities: List[CodeEntity] = []
+        entities: list[CodeEntity] = []
         lines = source_code.splitlines()
 
         # Simple function pattern for JS/TS/Go/Java
         fn_pattern = re.compile(r"^\s*(?:export\s+)?(?:async\s+)?(?:function\s+([A-Za-z0-9_]+)|def\s+([A-Za-z0-9_]+)|const\s+([A-Za-z0-9_]+)\s*=\s*(?:async\s*)?\()")
-        
-        current_chunk: List[str] = []
+
+        current_chunk: list[str] = []
         current_start = 1
         current_name = "block"
 
@@ -143,7 +143,7 @@ class CodeParser:
         return entities
 
     @classmethod
-    def parse_file(cls, file_path: str, source_code: str) -> List[CodeEntity]:
+    def parse_file(cls, file_path: str, source_code: str) -> list[CodeEntity]:
         if file_path.endswith(".py"):
             return cls.parse_python(file_path, source_code)
         return cls.parse_generic(file_path, source_code)

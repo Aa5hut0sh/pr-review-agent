@@ -1,16 +1,17 @@
 import logging
-import subprocess
 import shutil
-from typing import Dict, Any, List
-from app.graph.state import ReviewState
-from app.indexing.vector_store import VectorStore
-from app.indexing.code_graph import CodeGraph
+import subprocess
+from typing import Any
+
 from app.feedback.learnings import LearningsStore
+from app.graph.state import ReviewState
+from app.indexing.code_graph import CodeGraph
+from app.indexing.vector_store import VectorStore
 
 logger = logging.getLogger(__name__)
 
 
-def run_static_analysis(changed_files: List[str]) -> Dict[str, Any]:
+def run_static_analysis(changed_files: list[str]) -> dict[str, Any]:
     """
     Runs static analysis (e.g., ruff for Python) on changed files if available.
     """
@@ -29,7 +30,7 @@ def run_static_analysis(changed_files: List[str]) -> Dict[str, Any]:
     return results
 
 
-def context_node(state: ReviewState) -> Dict[str, Any]:
+def context_node(state: ReviewState) -> dict[str, Any]:
     diff = state.get("diff", "")
     changed_files = state.get("changed_files", [])
 

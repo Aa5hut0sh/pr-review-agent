@@ -1,7 +1,7 @@
 from app.core.models import Finding
+from app.github.diff_parser import DiffParser
 from app.graph.nodes.dedupe import dedupe_node
 from app.graph.nodes.verifier import is_line_in_diff
-from app.github.diff_parser import DiffParser
 
 
 def test_dedupe_merges_same_line():

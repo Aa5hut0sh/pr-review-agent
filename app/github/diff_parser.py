@@ -1,5 +1,5 @@
 import re
-from typing import List, Dict, Any, Tuple
+
 from app.core.models import DiffHunk
 
 IGNORED_EXTENSIONS = {
@@ -35,8 +35,8 @@ class DiffParser:
     """
 
     @classmethod
-    def parse(cls, raw_diff: str) -> Dict[str, List[DiffHunk]]:
-        file_hunks: Dict[str, List[DiffHunk]] = {}
+    def parse(cls, raw_diff: str) -> dict[str, list[DiffHunk]]:
+        file_hunks: dict[str, list[DiffHunk]] = {}
         current_file: str = ""
         current_hunk: DiffHunk | None = None
 
@@ -86,8 +86,8 @@ class DiffParser:
                     # Current line number in the new file
                     # Count existing + and space lines in this hunk
                     line_offset = sum(
-                        1 for l in current_hunk.diff_lines[:-1]
-                        if l.startswith("+") or l.startswith(" ")
+                        1 for dl in current_hunk.diff_lines[:-1]
+                        if dl.startswith("+") or dl.startswith(" ")
                     )
                     target_line = current_hunk.new_start + line_offset
                     current_hunk.added_lines.append((target_line, line[1:]))

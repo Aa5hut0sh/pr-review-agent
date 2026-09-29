@@ -1,4 +1,5 @@
-from typing import Literal, Optional, List, Dict, Any
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 
@@ -12,7 +13,7 @@ class Finding(BaseModel):
         description="Category classification of the finding"
     )
     comment: str = Field(description="Clear explanation of the problem and reason")
-    suggested_fix: Optional[str] = Field(
+    suggested_fix: str | None = Field(
         default=None,
         description="Concrete replacement code snippet or suggestion block"
     )
@@ -22,7 +23,7 @@ class Finding(BaseModel):
         le=1.0,
         description="Confidence score between 0.0 and 1.0"
     )
-    evidence: List[str] = Field(
+    evidence: list[str] = Field(
         default_factory=list,
         description="Code snippets, static tool output, or retrieved context evidence"
     )
@@ -44,8 +45,8 @@ class DiffHunk(BaseModel):
     old_start: int
     new_start: int
     hunk_header: str
-    diff_lines: List[str]
-    added_lines: List[tuple[int, str]] = Field(
+    diff_lines: list[str]
+    added_lines: list[tuple[int, str]] = Field(
         default_factory=list,
         description="List of (line_number, line_content) for newly added/modified lines"
     )
@@ -54,7 +55,7 @@ class DiffHunk(BaseModel):
 class FindingFeedback(BaseModel):
     finding_id: str
     action: Literal["approved", "rejected", "edited", "dismissed"]
-    feedback_text: Optional[str] = None
+    feedback_text: str | None = None
     repo: str
     category: str
     severity: str

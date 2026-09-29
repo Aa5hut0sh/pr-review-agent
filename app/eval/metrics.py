@@ -1,12 +1,13 @@
-from typing import List, Dict, Any
+from typing import Any
+
 from app.core.models import Finding
 from app.eval.synthetic_prs import SyntheticPR
 
 
 def evaluate_findings(
     synthetic_pr: SyntheticPR,
-    predicted_findings: List[Finding],
-) -> Dict[str, Any]:
+    predicted_findings: list[Finding],
+) -> dict[str, Any]:
     """
     Evaluates agent findings against ground-truth seeded bugs for a single PR.
     """
@@ -15,7 +16,6 @@ def evaluate_findings(
     matched_gt = set()
 
     for finding in predicted_findings:
-        match_found = False
         for idx, gt in enumerate(ground_truth):
             if idx in matched_gt:
                 continue
@@ -23,9 +23,8 @@ def evaluate_findings(
             if finding.file == gt["file"] and abs(finding.line - gt["line"]) <= 3:
                 tp += 1
                 matched_gt.add(idx)
-                match_found = True
                 break
-        
+
     fp = len(predicted_findings) - tp
     fn = len(ground_truth) - len(matched_gt)
 
@@ -39,7 +38,7 @@ def evaluate_findings(
     }
 
 
-def compute_aggregate_metrics(results: List[Dict[str, Any]]) -> Dict[str, float]:
+def compute_aggregate_metrics(results: list[dict[str, Any]]) -> dict[str, float]:
     """
     Computes overall Recall, Precision, and FP/PR across a benchmark run.
     """

@@ -348,3 +348,4 @@ with tab_learnings:
         st.write("Indexed Team Preferences:")
         for learning in active_learnings:
             st.markdown(f"- {learning}")
+

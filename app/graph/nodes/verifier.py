@@ -1,10 +1,12 @@
 import logging
-from typing import Dict, Any, List
+from typing import Any
+
 from pydantic import BaseModel, Field
-from app.graph.state import ReviewState
+
+from app.core.llm import invoke_structured_llm
 from app.core.models import Finding
 from app.github.diff_parser import DiffParser
-from app.core.llm import invoke_structured_llm
+from app.graph.state import ReviewState
 
 logger = logging.getLogger(__name__)
 
@@ -20,10 +22,10 @@ class VerificationDecision(BaseModel):
 
 
 class VerificationBatchResult(BaseModel):
-    results: List[VerificationDecision] = Field(default_factory=list)
+    results: list[VerificationDecision] = Field(default_factory=list)
 
 
-def is_line_in_diff(file: str, line: int, parsed_diff: Dict[str, Any]) -> bool:
+def is_line_in_diff(file: str, line: int, parsed_diff: dict[str, Any]) -> bool:
     """
     Checks if a target line exists within the added/changed lines or context of the diff.
     """
@@ -45,7 +47,7 @@ def is_line_in_diff(file: str, line: int, parsed_diff: Dict[str, Any]) -> bool:
     return False
 
 
-def verifier_node(state: ReviewState) -> Dict[str, Any]:
+def verifier_node(state: ReviewState) -> dict[str, Any]:
     """
     Critic Node: filters out hallucinations, unsupported claims, and invalid line references.
     """
@@ -57,7 +59,7 @@ def verifier_node(state: ReviewState) -> Dict[str, Any]:
     parsed_diff = DiffParser.parse(diff)
 
     # 1. Programmatic line & file validation
-    candidates: List[Finding] = []
+    candidates: list[Finding] = []
     for f in deduped:
         if not is_line_in_diff(f.file, f.line, parsed_diff):
             logger.info(f"Verifier dropped finding at {f.file}:{f.line} - line not present in diff.")
@@ -113,7 +115,7 @@ Return a VerificationBatchResult with an array of VerificationDecision correspon
             system_prompt=system_prompt,
         )
 
-        verified: List[Finding] = []
+        verified: list[Finding] = []
         for f, decision in zip(candidates, verification.results):
             if decision.is_valid and decision.adjusted_confidence >= 0.5:
                 f.confidence = decision.adjusted_confidence

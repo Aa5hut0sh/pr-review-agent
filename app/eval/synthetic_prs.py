@@ -1,4 +1,5 @@
-from typing import List, Dict, Any
+from typing import Any
+
 from pydantic import BaseModel
 
 
@@ -6,12 +7,12 @@ class SyntheticPR(BaseModel):
     id: str
     title: str
     description: str
-    changed_files: List[str]
+    changed_files: list[str]
     diff: str
-    ground_truth_bugs: List[Dict[str, Any]]
+    ground_truth_bugs: list[dict[str, Any]]
 
 
-SYNTHETIC_BENCHMARK_SUITE: List[SyntheticPR] = [
+SYNTHETIC_BENCHMARK_SUITE: list[SyntheticPR] = [
     SyntheticPR(
         id="pr-101-off-by-one",
         title="feat: add pagination helper for user listing",
@@ -52,7 +53,7 @@ index 1111111..2222222 100644
 +++ b/api/users.py
 @@ -20,6 +20,13 @@ async def get_user_profile(user_id: str):
      return db.fetch_user(user_id)
- 
+
 +@router.delete("/users/{user_id}")
 +async def delete_user(user_id: str):
 +    # Missing authorization check to ensure caller is an admin

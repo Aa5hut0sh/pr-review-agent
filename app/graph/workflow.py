@@ -1,19 +1,19 @@
 import logging
-from typing import Dict, Any, List, TypedDict
-from langgraph.graph import StateGraph, START, END
-from langgraph.types import Send
-from langgraph.checkpoint.memory import MemorySaver
+from typing import Any, TypedDict
 
-from app.graph.state import ReviewState
-from app.core.models import Finding
-from app.graph.nodes.ingest import ingest_node
-from app.graph.nodes.triage import triage_node
+from langgraph.checkpoint.memory import MemorySaver
+from langgraph.graph import END, START, StateGraph
+from langgraph.types import Send
+
 from app.graph.nodes.context import context_node
-from app.graph.nodes.specialists import run_specialist
 from app.graph.nodes.dedupe import dedupe_node
-from app.graph.nodes.verifier import verifier_node
 from app.graph.nodes.hitl import hitl_node
+from app.graph.nodes.ingest import ingest_node
 from app.graph.nodes.post import post_node
+from app.graph.nodes.specialists import run_specialist
+from app.graph.nodes.triage import triage_node
+from app.graph.nodes.verifier import verifier_node
+from app.graph.state import ReviewState
 
 logger = logging.getLogger(__name__)
 
@@ -22,11 +22,11 @@ class SpecialistInput(TypedDict):
     role: str
     diff: str
     description: str
-    context: Dict[str, Any]
-    static_analysis: Dict[str, Any]
+    context: dict[str, Any]
+    static_analysis: dict[str, Any]
 
 
-def specialist_worker_node(data: SpecialistInput) -> Dict[str, Any]:
+def specialist_worker_node(data: SpecialistInput) -> dict[str, Any]:
     """
     Worker node executed in parallel for each active specialist via LangGraph Send.
     Returns findings which are automatically accumulated via operator.add in ReviewState.

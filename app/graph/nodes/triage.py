@@ -1,8 +1,10 @@
 import logging
-from typing import Dict, Any, List
+from typing import Any
+
 from pydantic import BaseModel, Field
-from app.graph.state import ReviewState
+
 from app.core.llm import invoke_structured_llm
+from app.graph.state import ReviewState
 
 logger = logging.getLogger(__name__)
 
@@ -11,13 +13,13 @@ class TriageResult(BaseModel):
     pr_type: str = Field(description="feature, bugfix, refactor, docs, chore")
     size_category: str = Field(description="small, medium, large")
     risk_level: str = Field(description="low, medium, high")
-    active_specialists: List[str] = Field(
+    active_specialists: list[str] = Field(
         description="List of specialists to activate: bug, security, performance, tests, style"
     )
     rationale: str = Field(description="Explanation for triage classification")
 
 
-def triage_node(state: ReviewState) -> Dict[str, Any]:
+def triage_node(state: ReviewState) -> dict[str, Any]:
     changed_files = state.get("changed_files", [])
     diff = state.get("diff", "")
     metadata = state.get("pr_metadata", {})

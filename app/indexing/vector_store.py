@@ -1,7 +1,9 @@
 import logging
-from typing import List, Dict, Any, Optional
+from typing import Any
+
 from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, PointStruct
+from qdrant_client.models import Distance, PointStruct, VectorParams
+
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
@@ -34,11 +36,11 @@ class VectorStore:
                 self._embedder = "fallback"
         return self._embedder
 
-    def _compute_embeddings(self, texts: List[str]) -> List[List[float]]:
+    def _compute_embeddings(self, texts: list[str]) -> list[list[float]]:
         embedder = self._get_embedder()
         if embedder != "fallback" and embedder is not None:
             return [list(vector) for vector in embedder.embed(texts)]
-        
+
         # Simple deterministic hash-based fallback embedding if fastembed is absent
         embeddings = []
         for text in texts:
@@ -65,7 +67,7 @@ class VectorStore:
         except Exception as e:
             logger.error(f"Error initializing Qdrant collection: {e}")
 
-    def add_chunks(self, chunks: List[Dict[str, Any]]):
+    def add_chunks(self, chunks: list[dict[str, Any]]):
         """
         Adds code or document chunks to Qdrant.
         Each chunk must have 'text' and optional 'metadata'.
@@ -97,7 +99,7 @@ class VectorStore:
             points=points,
         )
 
-    def search(self, query: str, limit: int = 5, filter_dict: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
+    def search(self, query: str, limit: int = 5, filter_dict: dict[str, Any] | None = None) -> list[dict[str, Any]]:
         """
         Semantic search for similar code, past comments, or learnings.
         """

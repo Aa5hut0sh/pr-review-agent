@@ -1,21 +1,21 @@
-import logging
 import asyncio
-from typing import Dict, Any, List
-from app.graph.state import ReviewState
+import logging
+from typing import Any
+
 from app.core.models import Finding, PRMetadata
 from app.github.client import GitHubClient
+from app.graph.state import ReviewState
 
 logger = logging.getLogger(__name__)
 
 
 def generate_pr_summary(
     state: ReviewState,
-    approved_findings: List[Finding]
+    approved_findings: list[Finding]
 ) -> str:
-    metadata = state.get("pr_metadata", {})
     triage = state.get("triage", {})
     blast_radius = state.get("context", {}).get("blast_radius", {})
-    
+
     severity_counts = {"critical": 0, "high": 0, "medium": 0, "low": 0}
     category_counts = {}
 
@@ -24,9 +24,9 @@ def generate_pr_summary(
         category_counts[f.category] = category_counts.get(f.category, 0) + 1
 
     summary = []
-    summary.append("## 🤖 AI Pull Request Review\n")
+    summary.append("## AI Pull Request Review\n")
     summary.append(f"**Triage:** `{triage.get('pr_type', 'feature')}` | **Risk:** `{triage.get('risk_level', 'medium')}`\n")
-    
+
     # Blast radius note
     callers = blast_radius.get("callers", [])
     if callers:
@@ -35,7 +35,7 @@ def generate_pr_summary(
     summary.append("### 📊 Findings Summary\n")
     summary.append("| Category | Critical | High | Medium | Low | Total |")
     summary.append("|---|---|---|---|---|---|")
-    
+
     categories = sorted(list(set(f.category for f in approved_findings)))
     if not categories:
         summary.append("| *All Clean* | 0 | 0 | 0 | 0 | 0 |")
@@ -56,7 +56,7 @@ def generate_pr_summary(
     return "\n".join(summary)
 
 
-def post_node(state: ReviewState) -> Dict[str, Any]:
+def post_node(state: ReviewState) -> dict[str, Any]:
     approved_findings = state.get("approved", [])
     summary = generate_pr_summary(state, approved_findings)
 

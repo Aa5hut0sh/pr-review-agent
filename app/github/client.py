@@ -1,6 +1,8 @@
 import logging
-from typing import List, Dict, Any, Optional
+from typing import Any
+
 import httpx
+
 from app.core.config import settings
 from app.core.models import Finding, PRMetadata
 
@@ -13,7 +15,7 @@ class GitHubClient:
     Supports live GitHub App / Personal Access Token, or Simulation Mode when tokens are omitted.
     """
 
-    def __init__(self, token: Optional[str] = None):
+    def __init__(self, token: str | None = None):
         self.token = token or settings.github_token
         self.headers = {
             "Accept": "application/vnd.github.v3+json",
@@ -77,9 +79,9 @@ class GitHubClient:
     async def post_review(
         self,
         metadata: PRMetadata,
-        findings: List[Finding],
+        findings: list[Finding],
         summary_markdown: str,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Posts inline review comments using GitHub's Pull Request Review API.
         Includes ```suggestion markdown for actionable code fixes.

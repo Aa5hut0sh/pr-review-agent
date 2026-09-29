@@ -1,14 +1,16 @@
 import logging
-from typing import List, Dict, Any
+from typing import Any
+
 from pydantic import BaseModel, Field
-from app.core.models import Finding
+
 from app.core.llm import invoke_structured_llm
+from app.core.models import Finding
 
 logger = logging.getLogger(__name__)
 
 
 class FindingsList(BaseModel):
-    findings: List[Finding] = Field(default_factory=list)
+    findings: list[Finding] = Field(default_factory=list)
 
 
 SPECIALIST_ROLES = {
@@ -44,9 +46,9 @@ def run_specialist(
     role_key: str,
     diff: str,
     pr_description: str,
-    context_data: Dict[str, Any],
-    static_analysis: Dict[str, Any],
-) -> List[Finding]:
+    context_data: dict[str, Any],
+    static_analysis: dict[str, Any],
+) -> list[Finding]:
     """
     Executes a single specialist reviewer against the diff and context.
     """

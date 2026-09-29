@@ -1,7 +1,9 @@
-import logging
 import json
-from typing import Type, TypeVar, Optional, Any
+import logging
+from typing import TypeVar
+
 from pydantic import BaseModel
+
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
@@ -9,7 +11,7 @@ logger = logging.getLogger(__name__)
 T = TypeVar("T", bound=BaseModel)
 
 
-def get_groq_llm(model_name: Optional[str] = None, temperature: float = 0.1):
+def get_groq_llm(model_name: str | None = None, temperature: float = 0.1):
     """
     Returns an initialized ChatGroq instance using settings.GROQ_API_KEY.
     """
@@ -30,9 +32,9 @@ def get_groq_llm(model_name: Optional[str] = None, temperature: float = 0.1):
 
 def invoke_structured_llm(
     prompt: str,
-    output_schema: Type[T],
+    output_schema: type[T],
     system_prompt: str = "You are an expert AI code reviewer.",
-    model_name: Optional[str] = None,
+    model_name: str | None = None,
 ) -> T:
     """
     Invokes Groq with structured JSON output mapped to a Pydantic model.
@@ -47,7 +49,7 @@ def invoke_structured_llm(
         f"Return ONLY the raw JSON object or list without markdown code block backticks."
     )
 
-    from langchain_core.messages import SystemMessage, HumanMessage
+    from langchain_core.messages import HumanMessage, SystemMessage
     messages = [
         SystemMessage(content=augmented_system_prompt),
         HumanMessage(content=prompt),

@@ -1,19 +1,20 @@
 import logging
-from typing import Dict, Any, List
-from app.graph.state import ReviewState
+from typing import Any
+
 from app.core.models import Finding
+from app.graph.state import ReviewState
 
 logger = logging.getLogger(__name__)
 
 
-def hitl_node(state: ReviewState) -> Dict[str, Any]:
+def hitl_node(state: ReviewState) -> dict[str, Any]:
     """
     Human-in-the-Loop node:
     Flags findings with critical/high severity or borderline confidence for human approval.
     Automates approval for safe, high-confidence findings.
     """
-    verified: List[Finding] = state.get("verified", [])
-    
+    verified: list[Finding] = state.get("verified", [])
+
     risky_findings = []
     auto_approved = []
 

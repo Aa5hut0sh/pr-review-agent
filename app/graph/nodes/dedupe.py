@@ -1,27 +1,28 @@
 import logging
-from typing import Dict, Any, List
-from app.graph.state import ReviewState
+from typing import Any
+
 from app.core.models import Finding
+from app.graph.state import ReviewState
 
 logger = logging.getLogger(__name__)
 
 SEVERITY_ORDER = {"critical": 4, "high": 3, "medium": 2, "low": 1}
 
 
-def dedupe_node(state: ReviewState) -> Dict[str, Any]:
-    raw_findings: List[Finding] = state.get("findings", [])
+def dedupe_node(state: ReviewState) -> dict[str, Any]:
+    raw_findings: list[Finding] = state.get("findings", [])
     if not raw_findings:
         return {"deduped_findings": []}
 
     # Group by (file, line)
-    grouped: Dict[tuple[str, int], List[Finding]] = {}
+    grouped: dict[tuple[str, int], list[Finding]] = {}
     for f in raw_findings:
         key = (f.file.strip(), f.line)
         if key not in grouped:
             grouped[key] = []
         grouped[key].append(f)
 
-    deduped: List[Finding] = []
+    deduped: list[Finding] = []
     for key, group in grouped.items():
         if len(group) == 1:
             deduped.append(group[0])

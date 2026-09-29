@@ -1,6 +1,8 @@
 import logging
-from typing import List, Dict, Any, Set
+from typing import Any
+
 import networkx as nx
+
 from app.core.config import settings
 from app.indexing.parser import CodeEntity
 
@@ -37,7 +39,7 @@ class CodeGraph:
         if self.driver:
             self.driver.close()
 
-    def build_from_entities(self, entities: List[CodeEntity]):
+    def build_from_entities(self, entities: list[CodeEntity]):
         """
         Populate the code graph with nodes and relationships from parsed entities.
         """
@@ -87,13 +89,13 @@ class CodeGraph:
             except Exception as e:
                 logger.warning(f"Failed to sync to Neo4j: {e}")
 
-    def get_blast_radius(self, modified_entities: List[str]) -> Dict[str, Any]:
+    def get_blast_radius(self, modified_entities: list[str]) -> dict[str, Any]:
         """
         Finds all direct callers, callees, and affected files for the modified entities.
         """
-        callers: Set[str] = set()
-        callees: Set[str] = set()
-        affected_files: Set[str] = set()
+        callers: set[str] = set()
+        callees: set[str] = set()
+        affected_files: set[str] = set()
 
         for entity_name in modified_entities:
             # NetworkX query
