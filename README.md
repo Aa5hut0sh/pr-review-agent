@@ -43,7 +43,7 @@ cp .env.example .env
 Open `.env` and set:
 ```env
 GROQ_API_KEY=gsk_your_groq_api_key_here
-GROQ_MODEL=llama-3.3-70b-versatile
+GROQ_MODEL=openai/gpt-oss-120b
 ```
 
 ### 2. Option A: Run via Docker Compose (Recommended)

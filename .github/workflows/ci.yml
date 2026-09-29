@@ -26,8 +26,10 @@ jobs:
 
     - name: Run Ruff Lint Check
       run: |
-        ruff check app/
+        ruff check app/ tests/
 
     - name: Run Pytest Test Suite
+      env:
+        PYTHONPATH: .
       run: |
-        pytest -v tests/
+        python -m pytest -v tests/
