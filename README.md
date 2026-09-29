@@ -1,10 +1,10 @@
-# 🤖 AI PR Review Agent (CodeRabbit-style Multi-Agent System)
+# AI PR Review Agent (CodeRabbit-style Multi-Agent System)
 
 An enterprise-ready, multi-agent GitHub PR review system built with **LangGraph**, **FastAPI**, **Groq LLMs** (`openai/gpt-oss-120b`), **Qdrant Vector DB**, **Neo4j Code Graph**, and a **Streamlit** Human-in-the-Loop approval dashboard.
 
 ---
 
-## 📑 Architecture Overview
+## Architecture Overview
 
 ```
 GitHub webhook → FastAPI → Redis Queue → Worker (LangGraph)
@@ -19,11 +19,11 @@ GitHub webhook → FastAPI → Redis Queue → Worker (LangGraph)
 ```
 
 ### The Specialist Reviewers (Parallel Fan-Out)
-- 🐛 **Bug & Logic:** Off-by-one errors, null dereferences, broken boundary conditions.
-- 🛡️ **Security:** SQL injection, missing authorization checks, credentials leaks, SSRF.
-- ⚡ **Performance:** N+1 queries, synchronous blocking IO, unindexed lookups.
-- 🧪 **Tests:** Missing test coverage for changed branches or assertion deficits.
-- 🎨 **Style & Conventions:** Repo naming consistency, docstrings, idiomatic patterns.
+-  **Bug & Logic:** Off-by-one errors, null dereferences, broken boundary conditions.
+-  **Security:** SQL injection, missing authorization checks, credentials leaks, SSRF.
+-  **Performance:** N+1 queries, synchronous blocking IO, unindexed lookups.
+-  **Tests:** Missing test coverage for changed branches or assertion deficits.
+-  **Style & Conventions:** Repo naming consistency, docstrings, idiomatic patterns.
 
 ### The Verifier (Adversarial Critic)
 Eliminates hallucinations and false positives by verifying:
@@ -33,7 +33,7 @@ Eliminates hallucinations and false positives by verifying:
 
 ---
 
-## ⚙️ Quick Start
+##  Quick Start
 
 ### 1. Environment Configuration & Groq API Key
 Copy the template and paste your Groq API key:
@@ -68,7 +68,7 @@ uvicorn app.api.main:app --reload --port 8000
 
 ---
 
-## 📊 Ablation Study & Benchmark Results
+##  Ablation Study & Benchmark Results
 
 Evaluated across synthetic benchmark PRs with injected ground-truth defects:
 
@@ -84,7 +84,7 @@ Evaluated across synthetic benchmark PRs with injected ground-truth defects:
 
 ---
 
-## 🔒 Prompt Injection & Security Defense
+##  Prompt Injection & Security Defense
 
 1. **Untrusted Diff Delimitation:** PR diffs and descriptions are treated strictly as read-only untrusted payload data enclosed within explicit tags (`<diff>`, `<pr_description>`), never as system instructions.
 2. **Secret Redaction:** Strips recognized API keys and tokens before sending payloads to LLMs.
