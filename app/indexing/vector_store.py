@@ -103,16 +103,27 @@ class VectorStore:
         """
         try:
             query_vector = self._compute_embeddings([query])[0]
-            hits = self.client.search(
-                collection_name=self.collection_name,
-                query_vector=query_vector,
-                limit=limit,
-            )
+            if hasattr(self.client, "query_points"):
+                response = self.client.query_points(
+                    collection_name=self.collection_name,
+                    query=query_vector,
+                    limit=limit,
+                )
+                hits = response.points
+            elif hasattr(self.client, "search"):
+                hits = self.client.search(
+                    collection_name=self.collection_name,
+                    query_vector=query_vector,
+                    limit=limit,
+                )
+            else:
+                hits = []
+
             return [
                 {
-                    "score": hit.score,
-                    "payload": hit.payload,
-                    "id": hit.id,
+                    "score": getattr(hit, "score", 1.0),
+                    "payload": getattr(hit, "payload", {}),
+                    "id": getattr(hit, "id", ""),
                 }
                 for hit in hits
             ]

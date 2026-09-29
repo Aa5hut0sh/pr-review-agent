@@ -25,8 +25,14 @@ class GitHubClient:
     def is_simulation(self) -> bool:
         return not bool(self.token)
 
-    async def get_pr_metadata(self, owner: str, repo: str, pull_number: int) -> PRMetadata:
+    def is_simulation_target(self, owner: str, repo: str) -> bool:
         if self.is_simulation:
+            return True
+        sim_keywords = ("demo", "local", "benchmark", "test", "sample", "example")
+        return any(k in owner.lower() for k in sim_keywords) or any(k in repo.lower() for k in sim_keywords)
+
+    async def get_pr_metadata(self, owner: str, repo: str, pull_number: int) -> PRMetadata:
+        if self.is_simulation_target(owner, repo):
             logger.info("Simulation mode: generating mock PR metadata")
             return PRMetadata(
                 repo_owner=owner,
@@ -56,7 +62,7 @@ class GitHubClient:
             )
 
     async def get_pr_diff(self, owner: str, repo: str, pull_number: int) -> str:
-        if self.is_simulation:
+        if self.is_simulation_target(owner, repo):
             return ""
 
         url = f"https://api.github.com/repos/{owner}/{repo}/pulls/{pull_number}"
@@ -90,7 +96,7 @@ class GitHubClient:
                 "body": body,
             })
 
-        if self.is_simulation:
+        if self.is_simulation_target(metadata.repo_owner, metadata.repo_name):
             logger.info(
                 f"[SIMULATION] Posted review for PR #{metadata.pr_number} with {len(comments)} inline comments."
             )
